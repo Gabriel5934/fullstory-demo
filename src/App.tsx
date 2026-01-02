@@ -10,34 +10,36 @@ function App() {
 
   const isEnabled = import.meta.env.VITE_FULLSTORY_ENABLED === "true";
 
-  const identify = () => {
-    if (!displayName) return;
-
-    FullStory("setIdentity", {
-      uid: displayName.replace(/ /g, "").toLowerCase(),
-      properties: {
-        displayName: displayName,
-        email: displayName.replace(/ /g, "").toLowerCase() + "@example.com",
-      },
-    });
-  };
-
   const login = () => {
+    if (!displayNameInput) return;
+
     localStorage.setItem("displayName", displayNameInput);
     setDisplayName(displayNameInput);
 
     if (isEnabled) {
       console.debug("Initializing FullStory");
+
+      // Initialize FullStory
       init({
         orgId: import.meta.env.VITE_FULLSTORY_ORG_ID,
         devMode: import.meta.env.DEV,
       });
-    }
-  };
 
-  const initSession = () => {
-    login();
-    identify();
+      // Reset session identity to anonymous
+      FullStory("setIdentity", {
+        anonymous: true,
+      });
+
+      // Set the user to identified
+      FullStory("setIdentity", {
+        uid: displayNameInput.replace(/ /g, "").toLowerCase(),
+        properties: {
+          displayName: displayName,
+          email:
+            displayNameInput.replace(/ /g, "").toLowerCase() + "@example.com",
+        },
+      });
+    }
   };
 
   const logout = () => {
@@ -62,7 +64,7 @@ function App() {
       {displayName ? (
         <button onClick={logout}>Log out</button>
       ) : (
-        <button onClick={initSession}>Log in</button>
+        <button onClick={login}>Log in</button>
       )}
       <button
         id="big-orange-button"
