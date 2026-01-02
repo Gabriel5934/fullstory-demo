@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import { FullStory, init } from "@fullstory/browser";
 
@@ -7,23 +7,8 @@ function App() {
     localStorage.getItem("displayName") ?? null
   );
   const [displayNameInput, setDisplayNameInput] = useState("");
-  const isInitialized = useRef(false);
 
   const isEnabled = import.meta.env.VITE_FULLSTORY_ENABLED === "true";
-
-  useEffect(() => {
-    console.debug("isEnabled", isEnabled);
-    console.debug("displayName", displayName);
-    console.debug("isInitialized.current", isInitialized.current);
-    if (isEnabled && displayName && !isInitialized.current) {
-      console.debug("Initializing FullStory");
-      init({
-        orgId: import.meta.env.VITE_FULLSTORY_ORG_ID,
-        devMode: import.meta.env.DEV,
-      });
-      isInitialized.current = true;
-    }
-  }, [isEnabled, displayName]);
 
   const identify = () => {
     if (!displayName) return;
@@ -40,6 +25,14 @@ function App() {
   const login = () => {
     localStorage.setItem("displayName", displayNameInput);
     setDisplayName(displayNameInput);
+
+    if (isEnabled) {
+      console.debug("Initializing FullStory");
+      init({
+        orgId: import.meta.env.VITE_FULLSTORY_ORG_ID,
+        devMode: import.meta.env.DEV,
+      });
+    }
   };
 
   const initSession = () => {
