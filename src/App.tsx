@@ -12,7 +12,11 @@ function App() {
   const isEnabled = import.meta.env.VITE_FULLSTORY_ENABLED === "true";
 
   useEffect(() => {
+    console.debug("isEnabled", isEnabled);
+    console.debug("displayName", displayName);
+    console.debug("isInitialized.current", isInitialized.current);
     if (isEnabled && displayName && !isInitialized.current) {
+      console.debug("Initializing FullStory");
       init({
         orgId: import.meta.env.VITE_FULLSTORY_ORG_ID,
         devMode: import.meta.env.DEV,
