@@ -50,7 +50,24 @@ function App() {
   };
 
   const startCapture = () => {
-    FullStory("start");
+    FullStory("trackEvent", {
+      name: "Product Added",
+      properties: {
+        cart_id: "130983678493",
+        product_id: "798ith22928347",
+        sku: "L-100",
+        category: "Clothing",
+        name: "Button Front Cardigan",
+        brand: "Bright & Bold",
+        variant: "Blue",
+        price: 58.99,
+        quantity: 1,
+        coupon: "25OFF",
+        position: 3,
+        url: "https://www.example.com/product/path",
+        image_url: "https://www.example.com/product/path.jpg",
+      },
+    });
   };
 
   return (
